@@ -1,7 +1,12 @@
 # openf1-qualifying
-A small project I am working on using the OpenF1 API.
+A small project I am working on using the [OpenF1 API](https://openf1.org/).
 
 Currently it is based off of the F1 Qualifying results for the latest race (Singapore 2025).
+
+# Requirements
+Python, with the module "requests" installed.
+
+```pip install requests```
 
 # Planned/Potential Features
 - Replacing meeting keys and session keys with their respective values. (name of the race/name of session)
