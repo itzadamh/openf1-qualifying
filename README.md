@@ -9,7 +9,7 @@ Python, with the module "requests" installed.
 ```pip install requests```
 
 # Planned/Potential Features
-- Replacing meeting keys and session keys with their respective values. (name of the race/name of session)
-- Formatting changes - changing the lap time to mm:ss:ss.
-- Potential statistics including gap timing.
-- Allowing user input, aka "Silverstone", "2024", "Qualifying".
+- [ ] Replacing meeting keys and session keys with their respective values. (name of the race/name of session)
+- [x] Formatting changes - changing the lap time to mm:ss:ss.
+- [ ] Potential statistics including gap timing.
+- [ ] Allowing user input, aka "Silverstone", "2024", "Qualifying".
