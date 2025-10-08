@@ -10,12 +10,17 @@ driver_response = requests.get(driver_url)
 def format_laptime(seconds):
     # No lap duration, could be did not finish/start, disqualification
     if seconds is None:
-        return "None"
+        return None
     
     minutes = int(seconds // 60)
     remaining_seconds = seconds % 60
-    ms = int(round((remaining_seconds - int(remaining_seconds)) * 1000, 3)) # decimal part of the seconds is multiplied by 1000
+    ms = int(round((remaining_seconds - int(remaining_seconds)) * 1000, 3)) # Decimal part of the seconds is multiplied by 1000
     
+    # Handle the edge case where milliseconds round up to 1000
+    if ms == 1000:
+        ms = 0
+        remaining_seconds += 1
+        
     return f"{minutes:02}:{int(remaining_seconds):02}.{ms:03}"
 
 # ------ Main ------
