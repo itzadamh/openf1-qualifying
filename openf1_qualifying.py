@@ -5,7 +5,7 @@ driver_url = "https://api.openf1.org/v1/drivers"
 response = requests.get(url)
 driver_response = requests.get(driver_url)
 
-# Functions
+# ------ Functions ------
 
 def format_laptime(seconds):
     # No lap duration, could be did not finish/start, disqualification
@@ -17,6 +17,8 @@ def format_laptime(seconds):
     ms = int(round((remaining_seconds - int(remaining_seconds)) * 1000, 3)) # decimal part of the seconds is multiplied by 1000
     
     return f"{minutes:02}:{int(remaining_seconds):02}.{ms:03}"
+
+# ------ Main ------
 
 if response.status_code & driver_response.status_code == 200:
     data = response.json()
