@@ -1,11 +1,51 @@
 import requests
-url = "https://api.openf1.org/v1/starting_grid?session_key=9892&position>=1"
-driver_url = "https://api.openf1.org/v1/drivers"
-
-response = requests.get(url)
-driver_response = requests.get(driver_url)
 
 # ------ Functions ------
+def menu():
+    print("""
+          -------------------------------------
+          |                                   |
+          |   My F1 Qualifying mini project   |
+          |         powered by OpenF1         |
+          |                                   |
+          -------------------------------------
+Note: Fastest Lap is based on the furthest qualifying stage reached.
+If their lap is shown as "None", they may have DNF'd, DNS'd, or been DSQ'd.
+Additionally, the lap time should be accurate, but not guaranteed 100%. 
+          """)
+    
+    country = input("Please enter the country of the race (e.g. Singapore): \n")
+    year = int(input("Please enter the year of the race: \n"))
+    
+    load_message = f"Loading {country} {year} Qualifying results..."
+    
+    print("-" * (len(load_message) + 3))
+    print(load_message)
+    print("-" * (len(load_message) + 3))
+    
+    return country, year
+    
+def get_meetingkey(country, year):
+    url = f"https://api.openf1.org/v1/meetings?country_name={country}&year={year}"
+    response = requests.get(url)
+    meetings = response.json()
+    
+    if meetings:
+        return meetings[0]['meeting_key']
+    else:
+        return None
+
+def get_sessionkey(meeting_key):
+    session_name = "Qualifying"
+    url = f"https://api.openf1.org/v1/sessions?meeting_key={meeting_key}"
+    response = requests.get(url)
+    sessions = response.json()
+    
+    for session in sessions:
+        if session["session_name"].lower() == session_name.lower():
+            return session['session_key']
+    
+    return None
 
 def format_laptime(seconds):
     # No lap duration, could be did not finish/start, disqualification
@@ -24,8 +64,17 @@ def format_laptime(seconds):
     return f"{minutes:02}:{int(remaining_seconds):02}.{ms:03}"
 
 # ------ Main ------
+country, year = menu()
+meeting_key = get_meetingkey(country, year)
+session_key = get_sessionkey(meeting_key)
 
-if response.status_code & driver_response.status_code == 200:
+url = f"https://api.openf1.org/v1/starting_grid?session_key={session_key}&position>=1"
+driver_url = "https://api.openf1.org/v1/drivers"
+
+response = requests.get(url)
+driver_response = requests.get(driver_url)
+
+if response.status_code and driver_response.status_code == 200:
     data = response.json()
     driver_data = driver_response.json()
     print(f"Found {len(data)} starting positions.")
