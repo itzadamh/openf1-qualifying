@@ -1,7 +1,7 @@
 # openf1-qualifying
 A small project I am working on using the [OpenF1 API](https://openf1.org/).
 
-Currently it is based off of the F1 Qualifying results for the latest race (Singapore 2025).
+Originally based off of the Singapore 2025 qualifying results, it now has user input functionality. For the race you want to see qualifying results for, you enter the name of the country and the year, and the program will display the results.
 
 # Requirements
 Python, with the module "requests" installed.
