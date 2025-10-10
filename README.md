@@ -1,7 +1,7 @@
 # openf1-qualifying
 
-![Python](https://img.shields.io/badge/python-3.x-blue)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![Python](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/github/license/itzadamh/openf1-qualifying?color=blue&logo=opensourceinitiative)](https://github.com/itzadamh/openf1-qualifying/blob/main/LICENSE)
 
 A small project I’m working on using the [OpenF1 API](https://openf1.org/).  
 Originally based on the **Singapore 2025 qualifying results**, it now supports **user input** for any Grand Prix.  
