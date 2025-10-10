@@ -57,7 +57,7 @@ Fastest Lap: 01:41.117
 - [x] Formatting changes — lap times formatted to `mm:ss.ss`
 - [x] User input (e.g. `"Silverstone"`, `"2024"`)
 - [ ] Gap timing statistics between drivers
-- [ ] Command-line arguments (e.g. `python qualifying.py monaco 2024`)
+- [ ] Command-line arguments (e.g. `python openf1_qualifying.py monaco 2024`)
 - [ ] Option to export results to a text or CSV file
 
 ## 🤝 Contributing
