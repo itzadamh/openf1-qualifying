@@ -27,25 +27,38 @@ Additionally, the lap time should be accurate, but not guaranteed 100%.
     
 def get_meetingkey(country, year):
     url = f"https://api.openf1.org/v1/meetings?country_name={country}&year={year}"
-    response = requests.get(url)
-    meetings = response.json()
-    
-    if meetings:
-        return meetings[0]['meeting_key']
-    else:
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        meetings = response.json()
+        
+        if meetings:
+            return meetings[0]['meeting_key']
+        else:
+            return None
+    except requests.RequestException as e:
+        print(f"Error fetching meeting key: {e}")
         return None
 
 def get_sessionkey(meeting_key):
+    if meeting_key is None:
+        return None
+    
     session_name = "Qualifying"
     url = f"https://api.openf1.org/v1/sessions?meeting_key={meeting_key}"
-    response = requests.get(url)
-    sessions = response.json()
-    
-    for session in sessions:
-        if session["session_name"].lower() == session_name.lower():
-            return session['session_key']
-    
-    return None
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        sessions = response.json()
+        
+        for session in sessions:
+            if session["session_name"].lower() == session_name.lower():
+                return session['session_key']
+        
+        return None
+    except requests.RequestException as e:
+        print(f"Error fetching session key: {e}")
+        return None
 
 def format_laptime(seconds):
     # No lap duration, could be did not finish/start, disqualification
@@ -67,31 +80,41 @@ def format_laptime(seconds):
 def main():
     country, year = menu()
     meeting_key = get_meetingkey(country, year)
+    
+    if meeting_key is None:
+        print(f"Error: Could not find a meeting for {country} {year}.")
+        return
+    
     session_key = get_sessionkey(meeting_key)
+    
+    if session_key is None:
+        print(f"Error: Could not find qualifying session for {country} {year}.")
+        return
 
     url = f"https://api.openf1.org/v1/starting_grid?session_key={session_key}&position>=1"
-    driver_url = "https://api.openf1.org/v1/drivers"
+    driver_url = f"https://api.openf1.org/v1/drivers?session_key={session_key}"
 
     response = requests.get(url)
     driver_response = requests.get(driver_url)
 
-    if response.status_code and driver_response.status_code == 200:
+    if response.status_code == 200 and driver_response.status_code == 200:
         data = response.json()
         driver_data = driver_response.json()
         print(f"Found {len(data)} starting positions.")
-        print(f"Found {len(data)} drivers.\n")
+        print(f"Found {len(driver_data)} drivers.\n")
 
+        # Get the set of driver numbers we actually need
+        needed_driver_numbers = {item['driver_number'] for item in data}
+        
         driver_number_to_names = {}
         driver_number_to_team = {}
 
-        # Creates the dictionary with key, value pairs for drivers and their number
+        # Only process drivers that are in the qualifying results
         for driver in driver_data:
             driver_number = driver['driver_number']
-            full_name = driver['full_name']
-            team = driver['team_name']
-
-            driver_number_to_names[driver_number] = full_name
-            driver_number_to_team[driver_number] = team
+            if driver_number in needed_driver_numbers:
+                driver_number_to_names[driver_number] = driver['full_name']
+                driver_number_to_team[driver_number] = driver['team_name']
 
 
         # Qualifying loop
