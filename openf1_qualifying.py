@@ -16,12 +16,7 @@ Additionally, the lap time should be accurate, but not guaranteed 100%.
     
     country = input("Please enter the country of the race (e.g. Singapore): \n")
     year = int(input("Please enter the year of the race: \n"))
-    
-    load_message = f"Loading {country} {year} Qualifying results..."
-    
-    print("-" * (len(load_message) + 3))
-    print(load_message)
-    print("-" * (len(load_message) + 3))
+    print()
     
     return country, year
     
@@ -32,10 +27,44 @@ def get_meetingkey(country, year):
         response.raise_for_status()
         meetings = response.json()
         
-        if meetings:
-            return meetings[0]['meeting_key']
-        else:
+        if not meetings:
             return None
+
+        # If there's only one meeting, use it.
+        if len(meetings) == 1:
+            # print separator/loading message for single meeting (race)
+            load_message = f"Loading {country} {year} Qualifying results..."
+            print("-" * (len(load_message) + 3))
+            print(load_message)
+            print("-" * (len(load_message) + 3))
+            return meetings[0]['meeting_key']
+
+        # Multiple meetings: show a list and ask the user to choose.
+        print(f"Multiple meetings found for {country} {year}:")
+        for i, m in enumerate(meetings, start=1):
+            # Build a friendly label from available fields (fall back to meeting_key)
+            label = m.get('meeting_name') or m.get('meeting_location') or m.get('circuit_name') or m.get('meeting_key')
+            # If the API provides a date or round, show it too (optional)
+            date = m.get('start_date') or m.get('date')
+            if date:
+                label = f"{label} ({date})"
+            print(f"  {i}. {label}")
+
+        while True:
+            choice = input(f"Select meeting (1-{len(meetings)}) or 'q' to cancel: ").strip()
+            if choice.lower() == 'q':
+                return None
+            if choice.isdigit():
+                idx = int(choice)
+                if 1 <= idx <= len(meetings):
+                    # print separator/loading message after selection
+                    load_message = f"Loading {country} {year} Qualifying results..."
+                    print("-" * (len(load_message) + 3))
+                    print(load_message)
+                    print("-" * (len(load_message) + 3))
+                    return meetings[idx - 1]['meeting_key']
+            print("Invalid selection. Please try again.")
+
     except requests.RequestException as e:
         print(f"Error fetching meeting key: {e}")
         return None
