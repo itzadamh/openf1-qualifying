@@ -37,27 +37,61 @@ Please enter the year of the race:
 2024
 ```
 
+Otherwise with command-line arguments, you can do:
+
+```
+python openf1_qualifying.py "United States" 2025
+```
+
+### ⚠️ Note:
+For the first argument being the country name, if it includes a space such as above you must use quotation marks for it, however if there is no spaces then the quotation marks are not needed.
+
 ## 🧾 Example Output
+In both examples, only pole position is shown for demonstration. The whole program shows the entire grid.
 ```
 Please enter the country of the race (e.g. Singapore):
 Azerbaijan
 Please enter the year of the race:
 2025
 
-(for this example, this is just pole position - the program shows the whole grid)
+------------------------------------------------
+Loading Azerbaijan 2025 Qualifying results...
+------------------------------------------------
+Found 20 starting positions.
+Found 20 drivers.
 
 Driver: Max VERSTAPPEN | 1
 Team: Red Bull Racing
 Position: 1
 Fastest Lap: 01:41.117
-...
+
+```
+Or with command-line arguments:
+```
+python openf1_qualifying.py "United States" 2025
+```
+```
+Multiple meetings found for United States 2025:
+  1. Miami Grand Prix
+  2. United States Grand Prix
+Select meeting (1-2) or 'q' to cancel: 1
+---------------------------------------------------
+Loading United States 2025 Qualifying results...
+---------------------------------------------------
+Found 20 starting positions.
+Found 20 drivers.
+
+Driver: Max VERSTAPPEN | 1
+Team: Red Bull Racing
+Position: 1
+Fastest Lap: 01:26.204
 ```
 
 ## 🧩 Planned / Potential Features
 - [x] Formatting changes — lap times formatted to `mm:ss.ss`
 - [x] User input (e.g. `"Silverstone"`, `"2024"`)
+- [x] Command-line arguments (e.g. `python openf1_qualifying.py monaco 2024`)
 - [ ] Gap timing statistics between drivers
-- [ ] Command-line arguments (e.g. `python openf1_qualifying.py monaco 2024`)
 - [ ] Option to export results to a text or CSV file
 
 ## 🤝 Contributing
