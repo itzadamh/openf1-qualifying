@@ -158,10 +158,6 @@ def main():
             print(f"Position: {item['position']}")
             print(f"Fastest Lap: {laptime}\n")
             
-            # Hide Meeting and Session key for now
-            # print(f"Meeting Key: {item['meeting_key']}")
-            # print(f"Session Key: {item['session_key']}")
-            
     else:
         print("Error:", response.status_code, response.text)
         
