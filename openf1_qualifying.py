@@ -1,4 +1,5 @@
 import requests
+import sys
 
 # ------ Functions ------
 def menu():
@@ -106,8 +107,24 @@ def format_laptime(seconds):
     return f"{minutes:02}:{int(remaining_seconds):02}.{ms:03}"
 
 # ------ Main ------
-def main():
-    country, year = menu()
+def main(country=None, year=None):
+    # If both missing, use the full menu (keeps the header/help text)
+    if country is None and year is None:
+        country, year = menu()
+    else:
+        # Only ask for the missing value(s) without reprinting the full menu header
+        if country is None:
+            country = input("Please enter the country of the race (e.g. Singapore): \n")
+        if year is None:
+            # keep same validation as original menu
+            while True:
+                try:
+                    year = int(input("Please enter the year of the race: \n"))
+                    break
+                except ValueError:
+                    print("Year must be an integer. Please try again.")
+    print()
+
     meeting_key = get_meetingkey(country, year)
     
     if meeting_key is None:
@@ -162,5 +179,19 @@ def main():
         print("Error:", response.status_code, response.text)
         
 if __name__ == "__main__":
-    main()
+    country_arg = None
+    year_arg = None
+
+    if len(sys.argv) >= 3:
+        country_arg = sys.argv[1]
+        try:
+            year_arg = int(sys.argv[2])
+        except ValueError:
+            print("Year must be an integer.")
+            sys.exit(1)
+    elif len(sys.argv) == 2:
+        # allow just country and prompt for year
+        country_arg = sys.argv[1]
+
+    main(country_arg, year_arg)
     input("Press Enter to exit...")
