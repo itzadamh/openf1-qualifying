@@ -111,7 +111,9 @@ def main(country=None, year=None):
     # If both missing, use the full menu (keeps the header/help text)
     if country is None and year is None:
         country, year = menu()
+        used_menu = True
     else:
+        used_menu = False
         # Only ask for the missing value(s) without reprinting the full menu header
         if country is None:
             country = input("Please enter the country of the race (e.g. Singapore): \n")
@@ -123,7 +125,8 @@ def main(country=None, year=None):
                     break
                 except ValueError:
                     print("Year must be an integer. Please try again.")
-    print()
+    if not used_menu:
+        print()
 
     meeting_key = get_meetingkey(country, year)
     
